@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Search Form</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <h1>Search for a Book</h1>
+    <form id="search-form">
+      <input type="text" id="book-name" placeholder="Enter book name..." required />
+      <input type="text" id="author-name" placeholder="Enter author name..." />
+      <button type="submit">Search</button>
+    </form>
+
+    <div id="search-results">
+    
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("search-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const bookName = document.getElementById("book-name").value;
+      const authorName = document.getElementById("author-name").value;
+
+      if (bookName || authorName) {
+        document.getElementById("search-results").innerHTML = `
+          <p>Searching for: <strong>${bookName || "Any Book"}</strong> by <strong>${authorName || "Any Author"}</strong></p>
+        `;
+      } else {
+        document.getElementById("search-results").innerHTML = `<p>Please enter a search query.</p>`;
+      }
+    });
+  </script>
+</body>
+
+</html>

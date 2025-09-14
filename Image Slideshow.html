@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Slideshow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .slideshow-container {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .slide {
+            min-width: 100%;
+            height: 400px;
+        }
+        
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .navigation {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+        
+        .prev,
+        .next {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        
+        .prev:hover,
+        .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        
+        .dots {
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .dot {
+            height: 12px;
+            width: 12px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .dot.active {
+            background-color: #717171;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="slideshow-container">
+        <div class="slides">
+            <div class="slide"><img src="slide22.jpeg" alt="Slide 1"></div>
+            <div class="slide"><img src="slide23.jpeg" alt="Slide 2"></div>
+            <div class="slide"><img src="slide24.jpeg" alt="Slide 3"></div>
+        </div>
+
+        <div class="navigation">
+            <button class="prev">&lt;</button>
+            <button class="next">&gt;</button>
+        </div>
+
+        <div class="dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelector('.slides');
+        const slideElements = document.querySelectorAll('.slide');
+        const prevButton = document.querySelector('.prev');
+        const nextButton = document.querySelector('.next');
+        const dots = document.querySelectorAll('.dot');
+
+        let currentIndex = 0;
+        const totalSlides = slideElements.length;
+        let interval;
+
+        function updateSlide(position) {
+            slides.style.transform = `translateX(-${position * 100}%)`;
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[position].classList.add('active');
+        }
+
+        function showNextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSlide(currentIndex);
+        }
+
+        function showPrevSlide() {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateSlide(currentIndex);
+        }
+
+        function startAutoplay() {
+            interval = setInterval(showNextSlide, 3000);
+        }
+
+        function stopAutoplay() {
+            clearInterval(interval);
+        }
+
+        prevButton.addEventListener('click', () => {
+            stopAutoplay();
+            showPrevSlide();
+            startAutoplay();
+        });
+
+        nextButton.addEventListener('click', () => {
+            stopAutoplay();
+            showNextSlide();
+            startAutoplay();
+        });
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                stopAutoplay();
+                currentIndex = parseInt(dot.dataset.index);
+                updateSlide(currentIndex);
+                startAutoplay();
+            });
+        });
+
+        slides.addEventListener('mouseenter', stopAutoplay);
+        slides.addEventListener('mouseleave', startAutoplay);
+
+        startAutoplay();
+    </script>
+
+</body>
+
+</html>
