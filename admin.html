@@ -1,0 +1,83 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin - Add Books</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="container">
+        <form id="form">
+            <input class="input-design" type="text" id="title" placeholder="Book Title" required>
+            <input class="input-design" type="text" id="author" placeholder="Author" required>
+            <input class="input-design" type="text" id="genre" placeholder="Genre">
+            <input class="input-design" type="text" id="image" placeholder="Image URL">
+            <input class="input-design" type="text" id="publishedYear" placeholder="Published Year">
+        <!-- <textarea class="input-design" id="details" placeholder="Enter a brief description of the book..." required></textarea> -->
+            <button type="submit">Add Book</button>
+        </form>
+    </div>
+
+    <p id="message"></p>
+
+    <div id="book-list"></div>  <!-- 🔥 Books will be displayed here -->
+
+    <script src="js/navbar.js"></script>
+    <script>
+        document.getElementById("form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const title = document.getElementById("title").value;
+            const author = document.getElementById("author").value;
+            const genre = document.getElementById("genre").value;
+            const image = document.getElementById("image").value;
+            const publishedYear = document.getElementById("publishedYear").value;
+        //    const details = document.getElementById("details").value;  // ✅ Added this field
+
+            const response = await fetch("http://localhost:2000/api/books/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title, author, genre, image, publishedYear })  // ✅ Included details
+            });
+
+            const data = await response.json();
+            alert(data.message);
+            if (response.ok) {
+                document.getElementById("form").reset();
+                displayBook({ title, author, genre, image, publishedYear });  // ✅ Show the book on UI
+            }
+        });
+
+        // 🔥 Function to Display Books with "Read More" Button
+        function displayBook(book) {
+            const bookList = document.getElementById("book-list");
+            const bookCard = document.createElement("div");
+            bookCard.classList.add("book-card");
+
+            bookCard.innerHTML = `
+                <h3>${book.title}</h3>
+                <p><strong>Author:</strong> ${book.author}</p>
+                <p><strong>Genre:</strong> ${book.genre || "N/A"}</p>
+                <p><strong>Published Year:</strong> ${book.publishedYear || "Unknown"}</p>
+                <p class="description" style="display: none;">${book.details}</p>
+                <button class="read-more-btn">Read More</button>
+            `;
+
+            bookList.appendChild(bookCard);
+
+            // 🔄 Toggle Description Visibility
+            bookCard.querySelector(".read-more-btn").addEventListener("click", function () {
+                const description = bookCard.querySelector(".description");
+                if (description.style.display === "none") {
+                    description.style.display = "block";
+                    this.textContent = "Read Less";
+                } else {
+                    description.style.display = "none";
+                    this.textContent = "Read More";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

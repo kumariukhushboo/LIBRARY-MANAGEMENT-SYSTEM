@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback - Library Management System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header></header>
+
+  <main>
+    <div class="feedback-container">
+      <h2>Give Your Feedback</h2>
+      <form id="feedback-form">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Your Email" required>
+        <textarea id="message" placeholder="Write your feedback here..." required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+      <p id="responseMessage"></p>
+    </div>
+  </main>
+
+  <script src="js/navbar.js"></script>
+  <script >
+    document.getElementById("feedback-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    const response = await fetch("http://localhost:2000/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message })
+    });
+
+    const data = await response.json();
+   alert(data.message)
+
+    if (response.ok) {
+        document.getElementById("feedback-form").reset();
+    }
+});
+
+  </script>
+</body>
+</html>
